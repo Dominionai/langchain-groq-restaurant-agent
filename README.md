@@ -17,11 +17,11 @@
 
 ## 🧠 What Is This?
 
-This project combines two things — a **working AI web app** and a **deep dive into LangChain agents**.
+This project combines two things - a **working AI web app** and a **deep dive into LangChain agents**.
 
-Pick a cuisine. The AI names your restaurant, then builds a full menu for it — powered by **LLaMA 3.3 70B running on Groq**, chained together using **LangChain LCEL pipelines**.
+Pick a cuisine. The AI names your restaurant, then builds a full menu for it powered by **LLaMA 3.3 70B running on Groq**, chained together using **LangChain LCEL pipelines**.
 
-Beyond the app, `langchain_groq.ipynb` goes further — building an autonomous agent that can search the web, look up Wikipedia, solve maths, and hold a conversation with memory.
+Beyond the app, `langchain_groq.ipynb` goes further building an autonomous agent that can search the web, look up Wikipedia, solve maths, and hold a conversation with memory.
 
 ---
 
@@ -62,7 +62,7 @@ A standalone LangChain agent built from scratch that can:
 - 🧮 **Solve calculations** with a built-in calculator tool
 - 🧠 **Remember conversations** using buffer and window memory
 
-The agent doesn't just answer — it **thinks**:
+The agent doesn't just answer, it **thinks**:
 
 ```
 Question → Thought → Action → Observation → Final Answer
@@ -159,7 +159,7 @@ streamlit run main.py
 
 - [ ] Deploy to Streamlit Cloud (live demo link)
 - [ ] Add custom cuisine input by the user
-- [ ] RAG project — chat with your own documents
+- [ ] RAG project - chat with your own documents
 - [ ] Multi-agent system with LangGraph
 
 ---
@@ -169,7 +169,7 @@ streamlit run main.py
 ## 👤 Author
 
 **Egwuatu Chibuike Dominion**
-*AI & Machine Learning Enthusiast | Nnamdi Azikiwe University*
+*AI Engineer | Nnamdi Azikiwe University*
 
 [![Email](https://img.shields.io/badge/Email-chibuikedominion7@gmail.com-D14836?style=flat&logo=gmail&logoColor=white)](mailto:chibuikedominion7@gmail.com)
 
