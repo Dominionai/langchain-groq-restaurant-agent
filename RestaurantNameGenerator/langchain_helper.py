@@ -1,5 +1,4 @@
-from langchain_core.output_parsers import StrOutputParser
-from secret_key import groq_api_key 
+
 
 import os
 os.environ["GROQ_API_KEY"] = groq_api_key
