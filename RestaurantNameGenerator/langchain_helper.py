@@ -3,7 +3,7 @@ from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 import os
 
-# Reads from Streamlit Cloud secrets OR local environment
+# Reads GROQ_API_KEY from Streamlit Cloud Secrets or local environment variable
 groq_api_key = os.environ.get("GROQ_API_KEY")
 os.environ["GROQ_API_KEY"] = groq_api_key
 
