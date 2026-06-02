@@ -1,5 +1,5 @@
 streamlit
 langchain
-langchain-core
-langchain-groq
+langchain-core>=0.1.0
+langchain-groq>=0.1.0
 groq
