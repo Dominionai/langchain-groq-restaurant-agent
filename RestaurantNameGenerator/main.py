@@ -176,7 +176,7 @@ st.markdown("""
     border: 1px solid rgba(255, 68, 68, 0.3);
 }
 
-/* Password Input - REMOVED ASH BACKGROUND */
+/* Password Input */
 .stTextInput {
     margin-bottom: 1rem;
 }
@@ -428,7 +428,7 @@ st.markdown("""
 def check_password():
     """Verify password and return True with lockout after 5 failed attempts"""
     
-    CORRECT_PASSWORD = "DeMO-2026"  # 🔐 Change this to your desired password
+    CORRECT_PASSWORD = "......"  # 🔐 Change this to your desired password
     MAX_ATTEMPTS = 5
     LOCKOUT_HOURS = 5
     
