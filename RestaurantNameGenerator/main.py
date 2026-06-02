@@ -1,5 +1,6 @@
 import streamlit as st
 import time
+from datetime import datetime, timedelta
 
 # ─── Page configuration ────────────────────────────────────────────────────────────
 st.set_page_config(
@@ -8,6 +9,14 @@ st.set_page_config(
     layout="centered",
     initial_sidebar_state="collapsed",
 )
+
+# ─── Session state for authentication ──────────────────────────────────────────────
+if "authenticated" not in st.session_state:
+    st.session_state.authenticated = False
+if "failed_attempts" not in st.session_state:
+    st.session_state.failed_attempts = 0
+if "lockout_until" not in st.session_state:
+    st.session_state.lockout_until = None
 
 # ─── Custom CSS with brand colors ──────────────────────────────────────────────────
 st.markdown("""
@@ -125,6 +134,113 @@ st.markdown("""
     font-weight: 400;
     max-width: 500px;
     margin: 0 auto;
+}
+
+/* Password description text */
+.password-description {
+    color: #A0A0A0;
+    font-size: 0.9rem;
+    text-align: center;
+    margin-bottom: 0.5rem;
+    line-height: 1.5;
+}
+
+.password-contact {
+    color: #00FFFF;
+    font-size: 0.85rem;
+    text-align: center;
+    margin-bottom: 1.25rem;
+    display: inline-block;
+    width: 100%;
+}
+
+/* Attempts warning */
+.attempts-warning {
+    color: #FFD700;
+    font-size: 0.75rem;
+    text-align: center;
+    margin-top: 0.5rem;
+    padding: 0.25rem;
+    background: rgba(255, 215, 0, 0.1);
+    border-radius: 8px;
+}
+
+.lockout-message {
+    color: #FF4444;
+    font-size: 0.85rem;
+    text-align: center;
+    margin-top: 0.5rem;
+    padding: 0.5rem;
+    background: rgba(255, 68, 68, 0.1);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 68, 68, 0.3);
+}
+
+/* Password Input - REMOVED ASH BACKGROUND */
+.stTextInput {
+    margin-bottom: 1rem;
+}
+
+.stTextInput label {
+    color: #00FFFF !important;
+    font-weight: 600 !important;
+    font-size: 0.85rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.1em !important;
+    margin-bottom: 0.5rem !important;
+    display: block !important;
+}
+
+/* Removed the ash/gray background */
+.stTextInput > div > div > input {
+    background-color: transparent !important;
+    border: 1px solid rgba(0, 255, 255, 0.3) !important;
+    border-radius: 12px !important;
+    color: white !important;
+    padding: 0.75rem 1rem !important;
+}
+
+.stTextInput > div > div > input:focus {
+    border-color: #00FFFF !important;
+    box-shadow: 0 0 0 2px rgba(0, 255, 255, 0.1) !important;
+    background-color: rgba(0, 255, 255, 0.05) !important;
+}
+
+.stTextInput > div > div > input::placeholder {
+    color: #666666 !important;
+}
+
+/* Remove any additional background from the input container */
+.stTextInput > div {
+    background: transparent !important;
+}
+
+.stTextInput > div > div {
+    background: transparent !important;
+}
+
+.result-card {
+    background: rgba(26, 26, 26, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 24px;
+    padding: 2rem;
+    margin-top: 2rem;
+    border: 1px solid rgba(0, 100, 255, 0.3);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+    position: relative;
+    overflow: hidden;
+}
+
+.result-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #00FFFF, #0066FF, #00FFFF);
+    animation: pulse 2s ease-in-out infinite;
 }
 
 /* Select Box Styling */
@@ -308,6 +424,130 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+# ─── PASSWORD PROTECTION WITH LOCKOUT ──────────────────────────────────────────────
+def check_password():
+    """Verify password and return True with lockout after 5 failed attempts"""
+    
+    CORRECT_PASSWORD = "DeMO-2026"  # 🔐 Change this to your desired password
+    MAX_ATTEMPTS = 5
+    LOCKOUT_HOURS = 5
+    
+    # Check if currently locked out
+    if st.session_state.lockout_until:
+        current_time = datetime.now()
+        if current_time < st.session_state.lockout_until:
+            # Still locked out
+            remaining = st.session_state.lockout_until - current_time
+            hours_left = remaining.seconds // 3600
+            minutes_left = (remaining.seconds % 3600) // 60
+            
+            st.markdown("""
+            <div class="hero-section">
+                <div class="hero-badge">🔒 ACCOUNT LOCKED</div>
+                <div class="hero-icon">🔒⏰</div>
+                <div class="hero-title">Restaurant Name Generator</div>
+                <div class="hero-subtitle">Too many failed attempts</div>
+            </div>
+            """, unsafe_allow_html=True)
+            
+            st.markdown(f"""
+            <div class="password-card">
+                <div class="lockout-message">
+                    🔐 Too many failed password attempts.<br>
+                    ⏰ Please try again in <strong>{hours_left}h {minutes_left}m</strong>
+                </div>
+                <div style="text-align: center; margin-top: 1rem; color: #666666;">
+                    Contact the administrator for access
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+            return False
+        
+        else:
+            # Lockout period expired, reset attempts
+            st.session_state.failed_attempts = 0
+            st.session_state.lockout_until = None
+    
+    if st.session_state.authenticated:
+        return True
+    
+    # Show password entry form
+    st.markdown("""
+    <div class="hero-section">
+        <div class="hero-badge">🔒 PRIVATE DEMO</div>
+        <div class="hero-icon">🍽️⚡</div>
+        <div class="hero-title">Restaurant Name Generator</div>
+        <div class="hero-subtitle">Password protected demo for portfolio review</div>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    with st.container():
+        st.markdown("""
+        <div class="password-description">
+            This demo is password protected to manage API usage.
+        </div>
+        <div class="password-contact">
+            📧 Contact me for access
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # Show remaining attempts warning
+        remaining_attempts = MAX_ATTEMPTS - st.session_state.failed_attempts
+        if remaining_attempts <= 2:
+            st.markdown(f"""
+            <div class="attempts-warning">
+                ⚠️ Warning: {remaining_attempts} attempt(s) remaining before 5-hour lockout
+            </div>
+            """, unsafe_allow_html=True)
+        
+        # Password input
+        password = st.text_input(
+            "ENTER DEMO PASSWORD",
+            type="password", 
+            placeholder="••••••••",
+            key="password_input"
+        )
+        
+        # Center the button
+        col1, col2, col3 = st.columns([1, 2, 1])
+        with col2:
+            submit = st.button("🔓 ACCESS DEMO", use_container_width=True)
+        
+        if submit:
+            if not password:
+                st.error("❌ Please enter password.")
+            elif password == CORRECT_PASSWORD:
+                st.session_state.authenticated = True
+                st.session_state.failed_attempts = 0
+                st.session_state.lockout_until = None
+                st.rerun()
+            else:
+                # Increment failed attempts
+                st.session_state.failed_attempts += 1
+                remaining = MAX_ATTEMPTS - st.session_state.failed_attempts
+                
+                if st.session_state.failed_attempts >= MAX_ATTEMPTS:
+                    # Set lockout
+                    st.session_state.lockout_until = datetime.now() + timedelta(hours=LOCKOUT_HOURS)
+                    st.error(f"❌ Maximum attempts exceeded! Account locked for {LOCKOUT_HOURS} hours.")
+                    st.rerun()
+                else:
+                    st.error(f"❌ Invalid password. {remaining} attempt(s) remaining.")
+        
+        st.caption("🔐 Private demo - Password required")
+        
+        st.markdown('</div>', unsafe_allow_html=True)
+    
+    return False
+
+# ─── MAIN APP (only shows after password) ─────────────────────────────────────────
+if not check_password():
+    st.stop()
+
+# Reset failed attempts on successful login (already done above, but safe to keep)
+if st.session_state.failed_attempts > 0:
+    st.session_state.failed_attempts = 0
+
 # ─── Hero Section ──────────────────────────────────────────────────────────────────
 st.markdown("""
 <div class="hero-section">
@@ -353,8 +593,8 @@ if generate_clicked and cuisine:
             menu_html = '<div class="menu-grid">'
             for idx, item in enumerate(menu_items):
                 item = item.strip()
-                if item:
-                    # Add emoji based on cuisine type
+                if item:  # Only display non-empty items
+                    # Add different emoji based on cuisine type for fun
                     emoji = "🍽️"
                     if "Nigerian" in cuisine:
                         emoji = "🍛"
