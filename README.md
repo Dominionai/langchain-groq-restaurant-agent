@@ -100,12 +100,10 @@ langchain-groq-restaurant-agent/
 └── 📄 README.md
 ```
 
-## What is removed in this project because of streamlit?
+## What was removed in this project because of streamlit hosting
 
 ### 1. In main.py
 - Removed import langchain.py
-- CORRECT_PASSWORD = "****"  # Hardcoded in code to 
-CORRECT_PASSWORD = st.secrets["APP_PASSWORD"]  # Instead of hardcoded - The key is stored in streamlit app
 
 ### 2. In langchain.py
 - Removed from langchain_groq import ChatGroq
@@ -135,11 +133,12 @@ source ai_env/bin/activate
 pip install -r requirement.txt
 ```
 
-### 4. Add your API keys
+### 4. Add your API keys & password
 Fill in `secret_key.py`:
 ```python
 groq_api_key = ""       # → console.groq.com (free)
 serper_api_key = ""     # → serper.dev (free tier)
+APP_PASSWORD = ""       # → add your password
 ```
 
 ### 5. Run the app
