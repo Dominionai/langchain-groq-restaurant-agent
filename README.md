@@ -108,7 +108,7 @@ langchain-groq-restaurant-agent/
 ### 2. In langchain.py
 - Removed - from langchain_groq import ChatGroq
 - Converted CORRECT_PASSWORD = "your password"  # Hardcoded in code to
-  CORRECT_PASSWORD = st.secrets["APP_PASSWORD"]  # Instead of hardcoded in streamlit
+  CORRECT_PASSWORD = st.secrets["APP_PASSWORD"]  # Instead of hardcoded 
 ---
 
 ## ⚙️ Setup & Run
