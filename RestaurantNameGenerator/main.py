@@ -3,7 +3,7 @@ import langchain_helper
 import time
 from datetime import datetime, timedelta
 
-# ─── Page configuration ────────────────────────────────────────────────────────────
+# Page configuration
 st.set_page_config(
     page_title="Restaurant Name Generator",
     page_icon="🍽️",
@@ -11,7 +11,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed",
 )
 
-# ─── Session state for authentication ──────────────────────────────────────────────
+# Session state for authentication
 if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
 if "failed_attempts" not in st.session_state:
@@ -19,14 +19,12 @@ if "failed_attempts" not in st.session_state:
 if "lockout_until" not in st.session_state:
     st.session_state.lockout_until = None
 
-# ─── Custom CSS with brand colors ──────────────────────────────────────────────────
+# Custom CSS
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
 
-* {
-    font-family: 'Space Grotesk', sans-serif;
-}
+* { font-family: 'Space Grotesk', sans-serif; }
 
 .stApp {
     background: #1A1A1A;
@@ -37,20 +35,15 @@ st.markdown("""
 .stApp::before {
     content: '';
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: 
+    top: 0; left: 0; right: 0; bottom: 0;
+    background:
         radial-gradient(circle at 20% 50%, rgba(0, 255, 255, 0.03) 0%, transparent 50%),
         radial-gradient(circle at 80% 80%, rgba(0, 100, 255, 0.03) 0%, transparent 50%);
     pointer-events: none;
     z-index: 0;
 }
 
-#MainMenu, footer, header {
-    visibility: hidden;
-}
+#MainMenu, footer, header { visibility: hidden; }
 
 .block-container {
     padding: 3rem 2rem 4rem;
@@ -59,7 +52,6 @@ st.markdown("""
     position: relative;
 }
 
-/* Hero Section */
 .hero-section {
     text-align: center;
     margin-bottom: 2rem;
@@ -67,14 +59,8 @@ st.markdown("""
 }
 
 @keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(40px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes float {
@@ -88,14 +74,8 @@ st.markdown("""
 }
 
 @keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateX(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
+    from { opacity: 0; transform: translateX(-20px); }
+    to { opacity: 1; transform: translateX(0); }
 }
 
 .hero-icon {
@@ -137,7 +117,6 @@ st.markdown("""
     margin: 0 auto;
 }
 
-/* Password description text */
 .password-description {
     color: #A0A0A0;
     font-size: 0.9rem;
@@ -155,7 +134,6 @@ st.markdown("""
     width: 100%;
 }
 
-/* Attempts warning */
 .attempts-warning {
     color: #FFD700;
     font-size: 0.75rem;
@@ -177,10 +155,7 @@ st.markdown("""
     border: 1px solid rgba(255, 68, 68, 0.3);
 }
 
-/* Password Input */
-.stTextInput {
-    margin-bottom: 1rem;
-}
+.stTextInput { margin-bottom: 1rem; }
 
 .stTextInput label {
     color: #00FFFF !important;
@@ -192,7 +167,6 @@ st.markdown("""
     display: block !important;
 }
 
-/* Removed the ash/gray background */
 .stTextInput > div > div > input {
     background-color: transparent !important;
     border: 1px solid rgba(0, 255, 255, 0.3) !important;
@@ -207,44 +181,10 @@ st.markdown("""
     background-color: rgba(0, 255, 255, 0.05) !important;
 }
 
-.stTextInput > div > div > input::placeholder {
-    color: #666666 !important;
-}
+.stTextInput > div > div > input::placeholder { color: #666666 !important; }
+.stTextInput > div { background: transparent !important; }
+.stTextInput > div > div { background: transparent !important; }
 
-/* Remove any additional background from the input container */
-.stTextInput > div {
-    background: transparent !important;
-}
-
-.stTextInput > div > div {
-    background: transparent !important;
-}
-
-.result-card {
-    background: rgba(26, 26, 26, 0.95);
-    backdrop-filter: blur(20px);
-    border-radius: 24px;
-    padding: 2rem;
-    margin-top: 2rem;
-    border: 1px solid rgba(0, 100, 255, 0.3);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-    animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
-    position: relative;
-    overflow: hidden;
-}
-
-.result-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, #00FFFF, #0066FF, #00FFFF);
-    animation: pulse 2s ease-in-out infinite;
-}
-
-/* Select Box Styling */
 .stSelectbox label {
     color: #00FFFF !important;
     font-weight: 600 !important;
@@ -271,7 +211,6 @@ st.markdown("""
     color: white !important;
 }
 
-/* Button Styling */
 .stButton > button {
     background: linear-gradient(135deg, #00FFFF 0%, #0066FF 100%) !important;
     color: #1A1A1A !important;
@@ -288,30 +227,11 @@ st.markdown("""
     cursor: pointer !important;
 }
 
-.stButton > button::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.3);
-    transform: translate(-50%, -50%);
-    transition: width 0.6s, height 0.6s;
-}
-
-.stButton > button:hover::before {
-    width: 300px;
-    height: 300px;
-}
-
 .stButton > button:hover {
     transform: translateY(-2px) !important;
     box-shadow: 0 10px 25px rgba(0, 255, 255, 0.3) !important;
 }
 
-/* Restaurant Name */
 .restaurant-name {
     background: linear-gradient(135deg, #FFFFFF 0%, #00FFFF 50%, #0066FF 100%);
     -webkit-background-clip: text;
@@ -325,7 +245,6 @@ st.markdown("""
     animation: slideIn 0.6s ease-out;
 }
 
-/* Menu Items */
 .menu-title {
     color: #00FFFF;
     font-size: 1rem;
@@ -366,13 +285,6 @@ st.markdown("""
     color: #00FFFF;
 }
 
-/* Spinner */
-.stSpinner > div {
-    border-top-color: #00FFFF !important;
-    border-right-color: #0066FF !important;
-}
-
-/* Alert */
 .stAlert {
     background: rgba(0, 255, 255, 0.1) !important;
     backdrop-filter: blur(10px) !important;
@@ -381,14 +293,12 @@ st.markdown("""
     border: 1px solid rgba(0, 255, 255, 0.3) !important;
 }
 
-/* Divider */
 .custom-divider {
     height: 1px;
     background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.3), rgba(0, 102, 255, 0.3), transparent);
     margin: 1.5rem 0;
 }
 
-/* Stats Badge */
 .stats-badge {
     display: inline-flex;
     align-items: center;
@@ -402,7 +312,6 @@ st.markdown("""
     margin-top: 1rem;
 }
 
-/* Footer */
 .footer {
     text-align: center;
     margin-top: 4rem;
@@ -413,11 +322,8 @@ st.markdown("""
     letter-spacing: 0.05em;
 }
 
-.footer span {
-    color: #00FFFF;
-}
+.footer span { color: #00FFFF; }
 
-/* Caption styling */
 .stCaption {
     color: #666666 !important;
     text-align: center !important;
@@ -425,130 +331,105 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# ─── PASSWORD PROTECTION WITH LOCKOUT ──────────────────────────────────────────────
+
 def check_password():
-    """Verify password and return True with lockout after 5 failed attempts"""
-   CORRECT_PASSWORD = st.secrets["APP_PASSWORD"]  # 🔐 Change this to your desired password
-   MAX_ATTEMPTS = 5
-   LOCKOUT_HOURS = 5
-    
-    # Check if currently locked out
+    CORRECT_PASSWORD = st.secrets["APP_PASSWORD"]
+    MAX_ATTEMPTS = 5
+    LOCKOUT_HOURS = 5
+
     if st.session_state.lockout_until:
         current_time = datetime.now()
         if current_time < st.session_state.lockout_until:
-            # Still locked out
             remaining = st.session_state.lockout_until - current_time
             hours_left = remaining.seconds // 3600
             minutes_left = (remaining.seconds % 3600) // 60
-            
             st.markdown("""
             <div class="hero-section">
-                <div class="hero-badge">🔒 ACCOUNT LOCKED</div>
-                <div class="hero-icon">🔒⏰</div>
+                <div class="hero-badge">ACCOUNT LOCKED</div>
+                <div class="hero-icon">🔒</div>
                 <div class="hero-title">Restaurant Name Generator</div>
                 <div class="hero-subtitle">Too many failed attempts</div>
             </div>
             """, unsafe_allow_html=True)
-            
             st.markdown(f"""
-            <div class="password-card">
-                <div class="lockout-message">
-                    🔐 Too many failed password attempts.<br>
-                    ⏰ Please try again in <strong>{hours_left}h {minutes_left}m</strong>
-                </div>
-                <div style="text-align: center; margin-top: 1rem; color: #666666;">
-                    Contact the administrator for access
-                </div>
+            <div class="lockout-message">
+                Too many failed password attempts.<br>
+                Please try again in <strong>{hours_left}h {minutes_left}m</strong>
             </div>
             """, unsafe_allow_html=True)
             return False
-        
         else:
-            # Lockout period expired, reset attempts
             st.session_state.failed_attempts = 0
             st.session_state.lockout_until = None
-    
+
     if st.session_state.authenticated:
         return True
-    
-    # Show password entry form
+
     st.markdown("""
     <div class="hero-section">
-        <div class="hero-badge">🔒 PRIVATE DEMO</div>
+        <div class="hero-badge">PRIVATE DEMO</div>
         <div class="hero-icon">🍽️⚡</div>
         <div class="hero-title">Restaurant Name Generator</div>
         <div class="hero-subtitle">Password protected demo for portfolio review</div>
     </div>
     """, unsafe_allow_html=True)
-    
+
     with st.container():
         st.markdown("""
-        <div class="password-description">
-            This demo is password protected to manage API usage.
-        </div>
-        <div class="password-contact">
-            📧 Contact me for access
-        </div>
+        <div class="password-description">This demo is password protected to manage API usage.</div>
+        <div class="password-contact">Contact me for access</div>
         """, unsafe_allow_html=True)
-        
-        # Show remaining attempts warning
+
         remaining_attempts = MAX_ATTEMPTS - st.session_state.failed_attempts
         if remaining_attempts <= 2:
             st.markdown(f"""
             <div class="attempts-warning">
-                ⚠️ Warning: {remaining_attempts} attempt(s) remaining before 5-hour lockout
+                Warning: {remaining_attempts} attempt(s) remaining before 5-hour lockout
             </div>
             """, unsafe_allow_html=True)
-        
-        # Password input
+
         password = st.text_input(
             "ENTER DEMO PASSWORD",
-            type="password", 
+            type="password",
             placeholder="••••••••",
             key="password_input"
         )
-        
-        # Center the button
+
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
             submit = st.button("🔓 ACCESS DEMO", use_container_width=True)
-        
+
         if submit:
             if not password:
-                st.error("❌ Please enter password.")
+                st.error("Please enter password.")
             elif password == CORRECT_PASSWORD:
                 st.session_state.authenticated = True
                 st.session_state.failed_attempts = 0
                 st.session_state.lockout_until = None
                 st.rerun()
             else:
-                # Increment failed attempts
                 st.session_state.failed_attempts += 1
                 remaining = MAX_ATTEMPTS - st.session_state.failed_attempts
-                
                 if st.session_state.failed_attempts >= MAX_ATTEMPTS:
-                    # Set lockout
                     st.session_state.lockout_until = datetime.now() + timedelta(hours=LOCKOUT_HOURS)
-                    st.error(f"❌ Maximum attempts exceeded! Account locked for {LOCKOUT_HOURS} hours.")
+                    st.error(f"Maximum attempts exceeded! Account locked for {LOCKOUT_HOURS} hours.")
                     st.rerun()
                 else:
-                    st.error(f"❌ Invalid password. {remaining} attempt(s) remaining.")
-        
-        st.caption("🔐 Private demo - Password required")
-        
-        st.markdown('</div>', unsafe_allow_html=True)
-    
+                    st.error(f"Invalid password. {remaining} attempt(s) remaining.")
+
+        st.caption("Private demo - Password required")
+
     return False
 
-# ─── MAIN APP (only shows after password) ─────────────────────────────────────────
+
+# Main app - only runs after password check
 if not check_password():
     st.stop()
 
-# Reset failed attempts on successful login (already done above, but safe to keep)
 if st.session_state.failed_attempts > 0:
     st.session_state.failed_attempts = 0
 
-# ─── Hero Section ──────────────────────────────────────────────────────────────────
+# Hero Section
 st.markdown("""
 <div class="hero-section">
     <div class="hero-badge">✨ AI-POWERED GENERATOR</div>
@@ -558,43 +439,34 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# ─── Main Input Card ───────────────────────────────────────────────────────────────
+# Main Input
 with st.container():
-    
-    # Cuisine selector with custom styling
     cuisine = st.selectbox(
         "SELECT CUISINE TYPE",
-        ("Nigerian", "Kenyan", "Ghanaian", "South African", "Malian", "Tanzanian", "Italian", "Mexican", "Arabic", "American", "Japanese", "Chinese", "Indian", "French", "Thai", "Spanish", "Mediterranean", "Vegan/Vegetarian", "Ethiopian", "Korean", "Vietnamese", "Caribbean", "Brazilian", "Greek", "Turkish", "Moroccan", "Fusion"),
+        ("Nigerian", "Kenyan", "Ghanaian", "South African", "Malian", "Tanzanian",
+         "Italian", "Mexican", "Arabic", "American", "Japanese", "Chinese", "Indian",
+         "French", "Thai", "Spanish", "Mediterranean", "Vegan/Vegetarian", "Ethiopian",
+         "Korean", "Vietnamese", "Caribbean", "Brazilian", "Greek", "Turkish", "Moroccan", "Fusion"),
         help="Choose the culinary direction for your restaurant"
     )
-    
-    # Generate button
     generate_clicked = st.button("🚀 GENERATE NOW", use_container_width=True)
 
-# ─── Generate and Display Results ───────────────────────────────────────────────────
+# Generate and Display Results
 if generate_clicked and cuisine:
     with st.spinner("Crafting your unique restaurant experience..."):
         response = langchain_helper.generate_restaurant_name_and_items(cuisine)
-        
+
         if response:
-            
-            # Restaurant Name
             restaurant_name = response['restaurant_name'].strip()
-            st.markdown(f'<div class="restaurant-name"> {restaurant_name} </div>', unsafe_allow_html=True)
-            
+            st.markdown(f'<div class="restaurant-name">{restaurant_name}</div>', unsafe_allow_html=True)
             st.markdown('<div class="custom-divider"></div>', unsafe_allow_html=True)
-            
-            # Menu Items
             st.markdown('<div class="menu-title">📋 SIGNATURE MENU</div>', unsafe_allow_html=True)
-            
+
             menu_items = response['menu_items'].strip().split(",")
-            
-            # Display menu items in an interactive grid
             menu_html = '<div class="menu-grid">'
-            for idx, item in enumerate(menu_items):
+            for item in menu_items:
                 item = item.strip()
-                if item:  # Only display non-empty items
-                    # Add different emoji based on cuisine type for fun
+                if item:
                     emoji = "🍽️"
                     if "Nigerian" in cuisine:
                         emoji = "🍛"
@@ -608,10 +480,8 @@ if generate_clicked and cuisine:
                         emoji = "🍔"
                     menu_html += f'<div class="menu-item">{emoji} {item}</div>'
             menu_html += '</div>'
-            
             st.markdown(menu_html, unsafe_allow_html=True)
-            
-            # Stats badge
+
             st.markdown(f"""
             <div class="stats-badge">
                 ⚡ {len([x for x in menu_items if x.strip()])} curated menu items
@@ -619,11 +489,11 @@ if generate_clicked and cuisine:
                 🎨 {cuisine} cuisine
             </div>
             """, unsafe_allow_html=True)
-            
-elif generate_clicked and not cuisine:
-    st.warning("⚠️ Please select a cuisine type to generate your restaurant name and menu.")
 
-# ─── Footer ─────────────────────────────────────────────────────────────────────────
+elif generate_clicked and not cuisine:
+    st.warning("Please select a cuisine type to generate your restaurant name and menu.")
+
+# Footer
 st.markdown("""
 <div class="footer">
     <span>⚡ Powered by Chibuike Dominion</span> | <span>Built as my personal project</span> | <span>🍽️ Create your culinary identity</span>
