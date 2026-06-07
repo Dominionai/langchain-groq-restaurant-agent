@@ -1,9 +1,15 @@
 from langchain_groq import ChatGroq
 from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import StrOutputParser
-from secret_key import groq_api_key 
-
 import os
+
+# For Streamlit Cloud: reads from Streamlit Secrets
+# For local use: reads from secret_key.py
+try:
+    from secret_key import groq_api_key
+except ImportError:
+    groq_api_key = os.environ.get("GROQ_API_KEY")
+
 os.environ["GROQ_API_KEY"] = groq_api_key
 
 llm = ChatGroq(temperature=0.7, model_name="llama-3.3-70b-versatile")
