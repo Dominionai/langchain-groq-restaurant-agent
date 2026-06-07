@@ -3,12 +3,15 @@ from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 import os
 
-# For Streamlit Cloud: reads from Streamlit Secrets
-# For local use: reads from secret_key.py
+# Try Streamlit secrets first, then fall back to local secret_key.py
 try:
-    from secret_key import groq_api_key
-except ImportError:
-    groq_api_key = os.environ.get("GROQ_API_KEY")
+    import streamlit as st
+    groq_api_key = st.secrets["GROQ_API_KEY"]
+except Exception:
+    try:
+        from secret_key import groq_api_key
+    except ImportError:
+        groq_api_key = os.environ.get("GROQ_API_KEY", "")
 
 os.environ["GROQ_API_KEY"] = groq_api_key
 
