@@ -430,8 +430,8 @@ def check_password():
     """Verify password and return True with lockout after 5 failed attempts"""
     
    CORRECT_PASSWORD = st.secrets["APP_PASSWORD"]  # 🔐 Change this to your desired password
-    MAX_ATTEMPTS = 5
-    LOCKOUT_HOURS = 5
+   MAX_ATTEMPTS = 5
+   LOCKOUT_HOURS = 5
     
     # Check if currently locked out
     if st.session_state.lockout_until:
