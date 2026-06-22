@@ -1,2 +1,2 @@
 groq_api_key = ""
-serper_api_key = ""
+
